@@ -1,5 +1,6 @@
 from time import sleep
 from datetime import datetime
+from db_functions import save_task
 
 # DICIONÁRIO COM OS VALORES PADRÕES DOS CONTADORES
 # PODE SER ALTERADO PELA FUNÇÃO update_counter()
@@ -11,9 +12,9 @@ counter_standard_minutes = {
 
 # DICIONÁRIO DA ATIVIDADE
 task = {
-    "Category": "",
+    "Category": "Chess",
     "Name": "2x Chess Games",
-    "Difficulty": "Easy",
+    "Date": "",
     "Start_Time": "",
     "End_Time": "",
     "Minutes": ""
@@ -39,6 +40,9 @@ def end_counter():
     """
     Função que registra no dicionário da atividade atual
     a hora de finalização do contador
+
+    Return:
+        end_counter_time (): retorna a hora de finalização da atividade
     """
 
     end_counter_time = datetime.now()
@@ -74,12 +78,13 @@ def start_counter(counter_type: str):
     minutes = int(time_difference.total_seconds() / 60)
     task['Minutes'] = minutes
 
+    save_task(tuple(task.values()))
 
-# update_counter("short_rest", 3)
+
+update_counter("short_rest", .1)
 start_counter("short_rest")
 
 print("\n\n")
 
 for key, value in task.items():
     print(f"{key.title()}: {value}")
-    print(type(key))

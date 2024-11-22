@@ -22,7 +22,7 @@ def create_table_task():
 
     sql_create_task_table = """
         CREATE TABLE IF NOT EXISTS Task (
-        Category TEXT UNIQUE,
+        Category TEXT NOT NULL,
         Name TEXT NOT NULL,
         Date TEXT NOT NULL,
         Start_Time TEXT NOT NULL,
@@ -47,7 +47,7 @@ def create_table_category():
 
     sql_create_category_table = """
         CREATE TABLE IF NOT EXISTS Category (
-        Name TEXT UNIQUE PRIMARY KEY,
+        Name TEXT PRIMARY KEY,
         Difficulty TEXT NOT NULL,
         Color TEXT NOT NULL
         )
@@ -228,8 +228,8 @@ def delete_category(category_name: str):
     conn.close()
 
 
-save_category(("Chess", "Easy", "Blue"))
-save_task(('Chess', 'Playing Chess', '21/11/2024', '16:45', '17:10', '25',))
+# save_category(("Chess", "Easy", "Blue"))
+# save_task(('Chess', 'Playing Chess', '21/11/2024', '16:45', '17:10', '25',))
 # create_table_category()
 # create_table_task()
 # update_category(("Easy", "Blue"), "Chess")
