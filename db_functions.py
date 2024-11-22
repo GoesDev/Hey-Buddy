@@ -4,21 +4,24 @@ import sqlite3
 def connect_database():
     """
     Creates the connection to the Database
+
+    Return
+        conn (): database connection
     """
     conn = sqlite3.connect("app.db")
     return conn
 
 
-def create_table_activity():
+def create_table_task():
     """
-    Creates the Activity table if it not exists
+    Creates the Task table if it not exists
     """
 
     con = connect_database()
     cur = con.cursor()
 
-    sql_create_activity_table = """
-        CREATE TABLE IF NOT EXISTS Activity (
+    sql_create_task_table = """
+        CREATE TABLE IF NOT EXISTS Task (
         Name TEXT NOT NULL,
         Date TEXT NOT NULL,
         Start_Time TEXT NOT NULL,
@@ -29,7 +32,7 @@ def create_table_activity():
         )
     """
 
-    cur.execute(sql_create_activity_table)
+    cur.execute(sql_create_task_table)
     con.commit()
     con.close()
 
@@ -39,8 +42,8 @@ def create_table_category():
     Creates the Category table if it not exists
     """
 
-    con = connect_database()
-    cur = con.cursor()
+    conn = connect_database()
+    cur = conn.cursor()
 
     sql_create_category_table = """
         CREATE TABLE IF NOT EXISTS Category (
@@ -51,24 +54,24 @@ def create_table_category():
     """
 
     cur.execute(sql_create_category_table)
-    con.commit()
-    con.close()
+    conn.commit()
+    conn.close()
 
 
-def save_activity(new_activity):
+def save_task(new_task: tuple):
     """
-    Adds a new activity to the Database
+    Adds a new task to the Database
 
     Args:
-        new_activity (tuple): activity information
+        new_task (tuple): task information
     """
 
-    con = connect_database()
-    cur = con.cursor()
+    conn = connect_database()
+    cur = conn.cursor()
     cur.execute('PRAGMA foreing_keys = ON')
 
-    sql_insert_activity = """
-        INSERT INTO activity
+    sql_insert_task = """
+        INSERT INTO Task
         VALUES (?,
         ?,
         ?,
@@ -77,12 +80,12 @@ def save_activity(new_activity):
         ?)
     """
 
-    cur.execute(sql_insert_activity, new_activity)
-    con.commit()
-    con.close()
+    cur.execute(sql_insert_task, new_task)
+    conn.commit()
+    conn.close()
 
 
-def save_category(new_category):
+def save_category(new_category: tuple):
     """
     Adds a new category to the Database
 
@@ -90,8 +93,8 @@ def save_category(new_category):
         new_category (tuple): category information
     """
 
-    con = connect_database()
-    cur = con.cursor()
+    conn = connect_database()
+    cur = conn.cursor()
 
     sql_insert_category = """
         INSERT INTO category
@@ -101,88 +104,136 @@ def save_category(new_category):
     """
 
     cur.execute(sql_insert_category, new_category)
-    con.commit()
-    con.close()
+    conn.commit()
+    conn.close()
 
 
-def update_character(att_character):
+def update_category(att_category: tuple, category_name: str):
     """
-    Receives a tuple with the character's new information and
+    Receives a tuple with the category's new information and
     updates it in the database using the name as a reference.
 
     Args:
-        att_character (tuple): character new stats
-    """
-
-    con = connect_database()
-    cur = con.cursor()
-
-    sql_update_character = """
-        UPDATE character
-        SET level = ?,
-            life = ?,
-            attack = ?,
-            defense = ?,
-            gold = ?,
-            special_abilities = ?,
-            clues = ?,
-            equipament = ?
-        WHERE name = ?
-    """
-
-    cur.execute(sql_update_character, att_character)
-    con.commit()
-    con.close()
-
-
-def select_character(character_name):
-    """
-    Select a character from the Database and returns a tuple with its stats
-
-    Args:
-        character_name (string): name of an existing character in the database
-
-    Return:
-        character_sheet (tuple): character stats
+        att_category (tuple): category new stats
+        category_name (str): name of the category to be changed
     """
 
     conn = connect_database()
     cur = conn.cursor()
 
-    sql_select_character = """
-        SELECT *
-        FROM character
+    sql_update_category = """
+        UPDATE Category
+        SET Difficulty = ?,
+            Color = ?
         WHERE name = ?
     """
 
-    cur.execute(sql_select_character, (character_name,))
-    character_sheet = cur.fetchone()
+    att_category += (category_name,)
+    cur.execute(sql_update_category, att_category)
+    conn.commit()
     conn.close()
-    return character_sheet
 
 
-def delete_character(character_name):
+def select_task(task_name: str):
     """
-    Select a character from the Database and delete its
+    Select a task from the Database and returns a tuple with its infos
 
     Args:
-        character_name (string): name of an existing character in the database
+        task_name (string): name of an existing task in the database
+
+    Return:
+        task_info (tuple): task details
     """
 
-    con = connect_database()
-    cur = con.cursor()
+    conn = connect_database()
+    cur = conn.cursor()
 
-    sql_delete_character = """
-        DELETE FROM character
+    sql_select_task = """
+        SELECT *
+        FROM Task
         WHERE name = ?
     """
 
-    cur.execute(sql_delete_character, (character_name,))
-    con.commit()
-    con.close()
+    cur.execute(sql_select_task, (task_name,))
+    task_info = cur.fetchone()
+    conn.close()
+    return task_info
 
 
-# save_category(("chess", "easy", "blue"))
-# save_activity(('2x game','21/11/2024','16:45', '17:10', '25', 'chess'))
+def select_category(category_name: str):
+    """
+    Select a category from the Database and returns a tuple with its infos
+
+    Args:
+        category_name (string): name of an existing task in the database
+
+    Return:
+        category_info (tuple): category details
+
+    """
+
+    conn = connect_database()
+    cur = conn.cursor()
+
+    sql_select_category = """
+        SELECT *
+        FROM Category
+        WHERE Name = ?
+    """
+
+    cur.execute(sql_select_category, (category_name,))
+    category_info = cur.fetchone()
+    conn.close()
+    return category_info
+
+
+def delete_task(task_name: str):
+    """
+    Select a task from the Database and delete its
+
+    Args:
+        task_name (string): name of an existing task in the database
+    """
+
+    conn = connect_database()
+    cur = conn.cursor()
+
+    sql_delete_task = """
+        DELETE FROM Task
+        WHERE Name = ?
+    """
+
+    cur.execute(sql_delete_task, (task_name,))
+    conn.commit()
+    conn.close()
+
+
+def delete_category(category_name: str):
+    """
+    Select a category from the Database and delete its
+
+    Args:
+        category_name (string): name of an existing category in the database
+    """
+
+    conn = connect_database()
+    cur = conn.cursor()
+
+    sql_delete_category = """
+        DELETE FROM Category
+        WHERE Name = ?
+    """
+    cur.execute(sql_delete_category, (category_name,))
+    conn.commit()
+    conn.close()
+
+
+# save_category(("Chess", "Easy", "Blue"))
+# save_task(('2x game','21/11/2024','16:45', '17:10', '25', 'chess'))
 # create_table_category()
-# create_table_activity()
+# create_table_task()
+# update_category(("Easy", "Blue"), "Chess")
+# task = select_category("Chess")
+# print(task)
+# delete_task("2x game")
+# delete_category("Chess")
