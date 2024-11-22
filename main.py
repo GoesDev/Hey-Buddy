@@ -1,6 +1,8 @@
 from time import sleep
 from datetime import datetime
-from db_functions import save_task
+# from db_functions import save_task
+import os
+os.system('cls')
 
 # DICIONÁRIO COM OS VALORES PADRÕES DOS CONTADORES
 # PODE SER ALTERADO PELA FUNÇÃO update_counter()
@@ -36,7 +38,7 @@ def update_counter(counter_type: str, minutes: int):
     counter_standard_minutes[counter_type] = minutes
 
 
-def end_counter():
+def end_counter(start_counter_time):
     """
     Função que registra no dicionário da atividade atual
     a hora de finalização do contador
@@ -47,21 +49,29 @@ def end_counter():
 
     end_counter_time = datetime.now()
     task["End_Time"] = end_counter_time.strftime("%H:%M")
+    time_difference = end_counter_time - start_counter_time
+    minutes = int(time_difference.total_seconds() / 60)
+    task['Minutes'] = minutes
+    print(task)
 
-    return end_counter_time
 
-
-def start_counter(counter_type: str):
+def start_counter():
     """
     Função que inicia a contagem do Contador
 
         Args counter_type (str): informa a chave do dict
         counter_standard_minutes e pega o valor da contagem
     """
-
     start_counter_time = datetime.now()
     task["Date"] = start_counter_time.strftime("%d/%m/%Y")
     task["Start_Time"] = start_counter_time.strftime("%H:%M")
+
+    return start_counter_time
+
+
+def counter(counter_type):
+
+    start_counter_time = start_counter()
 
     seconds = counter_standard_minutes[counter_type] * 60
 
@@ -72,19 +82,8 @@ def start_counter(counter_type: str):
         sleep(1)
         seconds -= 1
         if seconds == 0:
-            end_counter_time = end_counter()
-
-    time_difference = end_counter_time - start_counter_time
-    minutes = int(time_difference.total_seconds() / 60)
-    task['Minutes'] = minutes
-
-    save_task(tuple(task.values()))
+            end_counter(start_counter_time)
 
 
-update_counter("short_rest", .1)
-start_counter("short_rest")
-
-print("\n\n")
-
-for key, value in task.items():
-    print(f"{key.title()}: {value}")
+update_counter("short_rest", 1)
+counter("short_rest")
