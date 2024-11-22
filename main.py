@@ -10,10 +10,13 @@ counter_standard_minutes = {
 }
 
 # DICIONÁRIO DA ATIVIDADE
-activity = {
-    "name": "2x Chess Games",
-    "category": "Chess",
-    "difficulty": "Easy"
+task = {
+    "Category": "",
+    "Name": "2x Chess Games",
+    "Difficulty": "Easy",
+    "Start_Time": "",
+    "End_Time": "",
+    "Minutes": ""
 }
 
 
@@ -39,7 +42,9 @@ def end_counter():
     """
 
     end_counter_time = datetime.now()
-    activity["end_time"] = end_counter_time.strftime("%H:%M")
+    task["End_Time"] = end_counter_time.strftime("%H:%M")
+
+    return end_counter_time
 
 
 def start_counter(counter_type: str):
@@ -51,8 +56,8 @@ def start_counter(counter_type: str):
     """
 
     start_counter_time = datetime.now()
-    activity["date"] = start_counter_time.strftime("%d/%m/%Y")
-    activity["start_time"] = start_counter_time.strftime("%H:%M")
+    task["Date"] = start_counter_time.strftime("%d/%m/%Y")
+    task["Start_Time"] = start_counter_time.strftime("%H:%M")
 
     seconds = counter_standard_minutes[counter_type] * 60
 
@@ -63,11 +68,18 @@ def start_counter(counter_type: str):
         sleep(1)
         seconds -= 1
         if seconds == 0:
-            end_counter()
+            end_counter_time = end_counter()
+
+    time_difference = end_counter_time - start_counter_time
+    minutes = int(time_difference.total_seconds() / 60)
+    task['Minutes'] = minutes
 
 
 # update_counter("short_rest", 3)
 start_counter("short_rest")
 
-for key, value in activity.items():
+print("\n\n")
+
+for key, value in task.items():
     print(f"{key.title()}: {value}")
+    print(type(key))
