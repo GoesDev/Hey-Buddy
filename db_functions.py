@@ -277,8 +277,11 @@ def delete_category(category_name: str):
 # update_category(("Easy", "Blue"), "Chess")
 # task = select_category("Chess")
 # print(task)
-# delete_task("2x game")
 # delete_category("Chess")
+# delete_task("2x Chess Games")
+# delete_task("Playing Chess")
+# delete_category("Python")
+# delete_category("English")
 
 # category = select_category("Python")
 # print(category)

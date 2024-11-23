@@ -56,7 +56,6 @@ def end_counter(start_counter_time: datetime):
     time_difference = end_counter_time - start_counter_time
     minutes = int(time_difference.total_seconds() / 60)
     task['Minutes'] = minutes
-    print(task)
 
 
 def start_counter():
