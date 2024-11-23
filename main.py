@@ -7,7 +7,7 @@ os.system('cls')
 # DICIONÁRIO COM OS VALORES PADRÕES DOS CONTADORES
 # PODE SER ALTERADO PELA FUNÇÃO update_counter()
 counter_standard_minutes = {
-    "Pomodoro": 25,
+    "Pomodoro": 1,
     "Short_Rest": 5,
     "Long_Rest": 15
 }
@@ -38,7 +38,7 @@ def update_counter(counter_type: str, minutes: int):
     counter_standard_minutes[counter_type] = minutes
 
 
-def end_counter(start_counter_time):
+def end_counter(start_counter_time: datetime):
     """
     Função que registra no dicionário da atividade atual
     a hora de finalização do contador, e os minutos de diferença
@@ -115,6 +115,22 @@ def create_new_task():
     task["Category"] = input("Category: ").title()
 
 
+def create_new_category():
+    """
+    Função que cria uma nova Category adicionando nome, dificuldade e cor
+    """
+    os.system('cls')
+    print("Create a new Category")
+    category = {
+        "Name": "",
+        "Difficulty": "",
+        "Color": ""
+    }
+    for key in category.keys():
+        category[key] = input(f"Category {key}: ")
+    print(category)
+
+
 def app_menu():
     """
     Função que exibe o menu inicial e mostra as opções do app
@@ -122,6 +138,7 @@ def app_menu():
     os.system('cls')
     print("Hey Buddy!")
     print("[1] Pomodoro Counter | [2] Short Rest | [3] Long Rest")
+    print("[4] New Category")
     counter_type_choice = input("-- ")
     is_a_task = True
     if counter_type_choice == "1":
@@ -133,6 +150,8 @@ def app_menu():
     elif counter_type_choice == "3":
         is_a_task = False
         counter("Long_Rest", is_a_task)
+    elif counter_type_choice == "4":
+        create_new_category()
     else:
         print("Invalid Option")
 
