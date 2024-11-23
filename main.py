@@ -7,15 +7,15 @@ os.system('cls')
 # DICIONÁRIO COM OS VALORES PADRÕES DOS CONTADORES
 # PODE SER ALTERADO PELA FUNÇÃO update_counter()
 counter_standard_minutes = {
-    "pomodoro": 25,
-    "short_rest": 5,
-    "long_rest": 15
+    "Pomodoro": 25,
+    "Short_Rest": 5,
+    "Long_Rest": 15
 }
 
 # DICIONÁRIO DA ATIVIDADE
 task = {
-    "Category": "Chess",
-    "Name": "2x Chess Games",
+    "Category": "",
+    "Name": "",
     "Date": "",
     "Start_Time": "",
     "End_Time": "",
@@ -41,10 +41,12 @@ def update_counter(counter_type: str, minutes: int):
 def end_counter(start_counter_time):
     """
     Função que registra no dicionário da atividade atual
-    a hora de finalização do contador
+    a hora de finalização do contador, e os minutos de diferença
+    entre a hora inicial e final do contador.
 
-    Return:
-        end_counter_time (): retorna a hora de finalização da atividade
+    Args:
+        start_counter_time (datetime): recebe a hora de início da task
+        para calcular a diferença entre a hora de término da task.
     """
 
     end_counter_time = datetime.now()
@@ -57,10 +59,11 @@ def end_counter(start_counter_time):
 
 def start_counter():
     """
-    Função que inicia a contagem do Contador
+    Função que registra a hora e a data do inicio do contador
+    Caso seja uma nova task
 
-        Args counter_type (str): informa a chave do dict
-        counter_standard_minutes e pega o valor da contagem
+    Return
+        start_counter_time (datetime): retorna a hora de início da task
     """
     start_counter_time = datetime.now()
     task["Date"] = start_counter_time.strftime("%d/%m/%Y")
@@ -69,9 +72,25 @@ def start_counter():
     return start_counter_time
 
 
-def counter(counter_type):
+def counter(counter_type: str, is_a_task: bool):
+    """
+    Função que inicia o contador
 
-    start_counter_time = start_counter()
+    Args:
+        counter_type(str): informa a chave do dict counter_standard_minutes
+        e pega o valor da contagem
+
+        is_a_task(bool): verifica se o contador irá iniciar uma task ou
+        período de descanso, caso seja task, deverá registrar data, hora
+        inicial e hora final.
+    """
+
+    os.system('cls')
+    if is_a_task:
+        start_counter_time = start_counter()
+        print(f"Task: {task['Name']} | Category: {task['Category']}")
+    else:
+        print("Resting Time")
 
     seconds = counter_standard_minutes[counter_type] * 60
 
@@ -82,8 +101,42 @@ def counter(counter_type):
         sleep(1)
         seconds -= 1
         if seconds == 0:
-            end_counter(start_counter_time)
+            if is_a_task:
+                end_counter(start_counter_time)
 
 
-update_counter("short_rest", 1)
-counter("short_rest")
+def create_new_task():
+    """
+    Função que cria uma nova Task adicionando nome e categoria
+    """
+    os.system('cls')
+    print("Create a new Task")
+    task["Name"] = input("Name: ").title()
+    task["Category"] = input("Category: ").title()
+
+
+def app_menu():
+    """
+    Função que exibe o menu inicial e mostra as opções do app
+    """
+    os.system('cls')
+    print("Hey Buddy!")
+    print("[1] Pomodoro Counter | [2] Short Rest | [3] Long Rest")
+    counter_type_choice = input("-- ")
+    is_a_task = True
+    if counter_type_choice == "1":
+        create_new_task()
+        counter("Pomodoro", is_a_task)
+    elif counter_type_choice == "2":
+        is_a_task = False
+        counter("Short_Rest", is_a_task)
+    elif counter_type_choice == "3":
+        is_a_task = False
+        counter("Long_Rest", is_a_task)
+    else:
+        print("Invalid Option")
+
+
+app_menu()
+# update_counter("short_rest", 1)
+# counter("short_rest")
