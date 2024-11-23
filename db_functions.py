@@ -187,6 +187,48 @@ def select_category(category_name: str):
     return category_info
 
 
+def select_all_tasks():
+    """
+    Função que seleciona todas as tasks do banco de dados
+    e armazena em uma lista.
+
+    Return:
+        all_tasks (list): uma lista com todas as tasks em tuplas
+    """
+    conn = connect_database()
+    cur = conn.cursor()
+
+    sql_select_all_tasks = """
+        SELECT *
+        FROM Task
+    """
+
+    cur.execute(sql_select_all_tasks)
+    all_tasks = cur.fetchall()
+    return all_tasks
+
+
+def select_all_categories():
+    """
+    Função que seleciona todas as categories do banco de dados
+    e armazena em uma lista
+
+    Return:
+        all_categories (list): uma lista com todas as categories em tuplas
+    """
+    conn = connect_database()
+    cur = conn.cursor()
+
+    sql_select_all_categories = """
+        SELECT *
+        FROM Category
+    """
+
+    cur.execute(sql_select_all_categories)
+    all_categories = cur.fetchall()
+    return all_categories
+
+
 def delete_task(task_name: str):
     """
     Select a task from the Database and delete its
@@ -237,3 +279,13 @@ def delete_category(category_name: str):
 # print(task)
 # delete_task("2x game")
 # delete_category("Chess")
+
+# category = select_category("Python")
+# print(category)
+
+# categories = select_all_categories()
+# print(type(categories))
+# for category in categories:
+#     print(category)
+
+# print(categories[0][0])

@@ -1,13 +1,13 @@
 from time import sleep
 from datetime import datetime
-# from db_functions import save_task
+from db_functions import save_category, select_all_categories
 import os
 os.system('cls')
 
 # DICIONÁRIO COM OS VALORES PADRÕES DOS CONTADORES
 # PODE SER ALTERADO PELA FUNÇÃO update_counter()
 counter_standard_minutes = {
-    "Pomodoro": 1,
+    "Pomodoro": 25,
     "Short_Rest": 5,
     "Long_Rest": 15
 }
@@ -112,7 +112,12 @@ def create_new_task():
     os.system('cls')
     print("Create a new Task")
     task["Name"] = input("Name: ").title()
-    task["Category"] = input("Category: ").title()
+    category = input("[1] New Category [2] Existing Category ")
+    if category == "1":
+        task["Category"] = input("Category: ").title()
+    else:
+        # Caso seja uma Categoria existente, chama a função a seguir
+        select_existing_category()
 
 
 def create_new_category():
@@ -128,7 +133,21 @@ def create_new_category():
     }
     for key in category.keys():
         category[key] = input(f"Category {key}: ")
-    print(category)
+    save_category(tuple(category.values()))
+
+
+def select_existing_category():
+    """
+    Função que recebe as Categorias existentes do banco de dados
+    exibe ao usuário e armazena a opção escolhida no dicionário.
+    """
+    all_categories = select_all_categories()
+    count = 0
+    for category in all_categories:
+        print(f"[{count}] {category[0]}")
+        count += 1
+    category_choice = int(input("-- "))
+    task["Category"] = all_categories[category_choice][0]
 
 
 def app_menu():
