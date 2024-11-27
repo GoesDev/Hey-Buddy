@@ -279,7 +279,7 @@ def delete_category(category_name: str):
 # print(task)
 # delete_category("Chess")
 # delete_task("2x Chess Games")
-# delete_task("Playing Chess")
+# delete_task("name")
 # delete_category("Python")
 # delete_category("English")
 
